@@ -5,26 +5,32 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Role;
+
 class RoleController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        if ($request->ajax()) {
+            return datatables()->of(Role::query());
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('backend.role.index');
     }
 
     /**
@@ -35,7 +41,15 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $role = new Role();
+        $role->name = $request->name;
+        $role->save();
+
+        return response()->json($role);
     }
 
     /**
@@ -46,18 +60,8 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $role = Role::findOrFail($id);
+        return response()->json($role);
     }
 
     /**
@@ -69,7 +73,15 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $role = Role::findOrFail($id);
+        $role->name = $request->name;
+        $role->save();
+
+        return response()->json($role);
     }
 
     /**
@@ -80,6 +92,6 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Role::findOrFail($id)->delete();
     }
 }

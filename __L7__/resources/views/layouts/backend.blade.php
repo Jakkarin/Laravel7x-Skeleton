@@ -24,6 +24,8 @@
     <!-- Styles -->
     <link href="{{ asset('static/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('static/css/app.css') }}" rel="stylesheet">
+
+    @yield('css')
 </head>
 
 <body id="page-top">
@@ -43,8 +45,10 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
+            @php $isCurrentRouteMatch = request()->routeIs('dashboard') @endphp
+
+            <li class="nav-item {{ $isCurrentRouteMatch ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -54,40 +58,26 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Admin Management
+                Administrator
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
+            @php $isCurrentRoute = request()->routeIs('admin.role.*') @endphp
+            @php $isCurrentRouteMatch = request()->routeIs('admin.role.index') @endphp
+
+            <li class="nav-item {{ $isCurrentRoute ? 'active' : '' }}">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAuthentication"
+                    aria-expanded="true" aria-controls="collapseAuthentication">
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Authentication</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Management:</h6>
-                        <a class="collapse-item" href="buttons.html">Role Management</a>
-                        <a class="collapse-item" href="cards.html">Users Management</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseAuthentication" class="collapse {{ $isCurrentRoute ? 'show' : '' }}" aria-labelledby="headingTwo"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
+                        <h6 class="collapse-header">Management:</h6>
+                        <a class="collapse-item {{ $isCurrentRouteMatch ? 'active' : '' }}"
+                            href="{{ route('admin.role.index') }}">Role Management</a>
+                        <a class="collapse-item" href="cards.html">Users Management</a>
                     </div>
                 </div>
             </li>
@@ -249,6 +239,8 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('static/js/sb-admin-2.min.js') }}"></script>
+
+    @yield('js')
 </body>
 
 </html>

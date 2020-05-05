@@ -16,10 +16,24 @@ use Illuminate\Support\Facades\Route;
 
 // https://github.com/xiaomalover/laravel-skeleton
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::pattern('id', '[0-9]+');
+
+Route::get('', 'WelcomeController@index');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::namespace('Backend')->group(function () {
+    Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+});
+
+Route::namespace('Admin')->prefix('admin')->group(function () {
+    Route::resource('role', 'RoleController')
+        ->except(['create', 'edit'])
+        ->names([
+            'index'     => 'admin.role.index',
+            'show'      => 'admin.role.show',
+            'store'     => 'admin.role.store',
+            'update'    => 'admin.role.update',
+            'destroy'   => 'admin.role.destroy',
+        ]);
+});
